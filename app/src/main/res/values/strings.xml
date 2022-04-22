@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">Custodian</string>
+    <string name="nav_open">open</string>
+    <string name="nav_close">close</string>
+
+    //strings
+    <string name="get_started">GetStarted</string>
+    <string name="welcome">welcometoCUSTODIAN</string>
+    <string name="login">Login</string>
+    <string name="Otp_verification">OTP Verification</string>
+    <string name="verify">Verify</string>
+    <string name="Watch_over_me">Watch Over Me</string>
+    <string name="Emergency_SOS">Emergency SOS</string>
+    <string name="Profile">Profile</string>
+    <string name="name">YourName</string>
+    <string name="Home">Home</string>
+    <string name="Edit_profile">Edit Profile</string>
+    <string name="Manage_guardians">Manage Guardians</string>
+    <string name="App_Features">Appfeatures</string>
+    <string name="get_help">Get Help</string>
+    <string name="About_us">About us</string>
+    <string name="Log_Out">Log out</string>
+    <string name="Change_name">Change Name</string>
+    <string name="change_phone_number">Change phone number</string>
+    <string name="Change_date_of_birth">change date of birth</string>
+    <string name="Enter_your_name">Enter your name</string>
+    <string name="enter_gender">Gender</string>
+    <string name="Enter_date_of_birth">enter date of birth</string>
+    <string name="Contact_support">Contact support</string>
+    <string name="Send_Feedback">Send Feedback</string>
+    <string name="Terms_of_services">Terms of services</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="call_us">Call Us</string>
+    <string name="get_help_desc">Do you still need help or have any feedback for us? Please write us so that we can help you better.</string>
+    <string name="about_us_desc">We are trying to make world a better place.\n\nBy Having this App you will never walk alone.</string>
+
+
+    <string name="heading1">Welcome</string>
+    <string name="description1">Welcome to custodian.You can use the two given features which will make you feel safe and your parents less worried.</string>
+    <string name="heading2">Watch over me</string>
+    <string name="description2">Feeling Unsafe, press the watch over me so that parents can keep a track.
+  </string>
+    <string name="heading3">Emergency SOS</string>
+    <string name="description3">At the time of emergency press the SOS to send your locaton so that guardians can take action.</string>
+    <string name="skip">Skip</string>
 </resources>

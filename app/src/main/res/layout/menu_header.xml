@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#8EFF8B"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="110dp"
+        android:layout_height="100dp"
+        android:src="@drawable/profile"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="2dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.CircularBorder"
+        android:background="@drawable/bar_round_bg"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mayank Thakur"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:textColor="#3D54DF"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif-condensed"/>
+
+</LinearLayout>
