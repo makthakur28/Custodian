@@ -2,20 +2,19 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
-    tools:openDrawer="left"
     tools:context=".MainActivity">
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/nav_view"
-        app:menu="@menu/menu_items"
-        app:headerLayout="@layout/menu_header"
+        android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:layout_gravity="start"/>
+        app:headerLayout="@layout/menu_header"
+        app:menu="@menu/menu_items" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -52,6 +51,85 @@
             android:src="@drawable/ic_notifications"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:overScrollMode="ifContentScrolls"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="@+id/map"
+            app:layout_constraintStart_toStartOf="@+id/map">
+
+            <LinearLayout
+                android:id="@+id/GuardLL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/guardianHome"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome2"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome3"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome4"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome5"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome6"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+                <ImageButton
+                    android:id="@+id/guardianHome7"
+                    android:layout_width="?android:actionBarSize"
+                    android:layout_height="?android:actionBarSize"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bar_round_bg"
+                    android:src="@drawable/ic_avatar" />
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <LinearLayout
             android:id="@+id/linearLayout"

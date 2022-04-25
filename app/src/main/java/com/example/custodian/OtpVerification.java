@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.chaos.view.PinView;
+import com.example.custodian.Modals.UserModal;
+import com.example.custodian.NotificationHandler.FirebaseInstanceId;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +42,8 @@ public class OtpVerification extends AppCompatActivity {
     String VerificationCodeBySystem;
     PinView pinView;
     Button verify_btn;
-    String Phone_number;
+    private String name,phone,password;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +54,14 @@ public class OtpVerification extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         verify_btn = findViewById(R.id.verify_btn);
 
+        name = intent.getStringExtra("name");
+        password = intent.getStringExtra("password");
+        phone = intent.getStringExtra("phone");
+
         pinView.requestFocus();
 
-        Phone_number = intent.getStringExtra("phone_number");
 
-         sendOtpverification(Phone_number);
+         sendOtpverification(phone);
          
          verify_btn.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -73,9 +80,10 @@ public class OtpVerification extends AppCompatActivity {
 
     private void sendOtpverification(String phone) {
 
+        Toast.makeText(this, "Verification proccessed"+ phone, Toast.LENGTH_SHORT).show();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phone)       // Phone number to verify
+                        .setPhoneNumber("+91"+phone)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(this)                 // Activity (for callback binding)
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
@@ -102,7 +110,7 @@ public class OtpVerification extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(OtpVerification.this, "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OtpVerification.this, "verification failed: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -117,11 +125,14 @@ public class OtpVerification extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(OtpVerification.this,MainActivity.class);
+                            addDataToFirebase();
+
+                            Intent intent = new Intent(OtpVerification.this, MainActivity.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("phone", "+91"+phone);
+                            intent.putExtra("password", password);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                            finish();
-
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -132,5 +143,14 @@ public class OtpVerification extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void addDataToFirebase() {
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+
+            UserModal user = new UserModal(name,"+91"+phone, password);
+            ref.child("+91"+phone).setValue(user);
+
     }
 }

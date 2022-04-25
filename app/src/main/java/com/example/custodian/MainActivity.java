@@ -7,6 +7,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,6 +51,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     boolean isPermissionGranted;
@@ -61,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseDatabase database;
     DatabaseReference reference;
     LatLng latLng;
+    LinearLayout GuardianLL;
+    private TextView WelcomeUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menu = findViewById(R.id.menu_Avatar);
         locationBtn = findViewById(R.id.my_location_btn);
         notification_btn = findViewById(R.id.notification_btn);
+        GuardianLL = findViewById(R.id.GuardLL);
         navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
@@ -82,44 +91,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @SuppressLint("NonConstantResourceId")
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch(item.getItemId()){
-//                    case R.id.home:
-//                        startActivity(new Intent(MainActivity.this,MainActivity.class));
-//                        break;
-//                    case R.id.profile:
-//                        startActivity(new Intent(MainActivity.this,ProfileActivity.class));
-//                        break;
-//                    case R.id.manage:
-//                        startActivity(new Intent(MainActivity.this,ManageGuardians.class));
-//                        break;
-//                    case R.id.About:
-//                        startActivity(new Intent(MainActivity.this,AboutUs.class));
-//                        break;
-//                    case R.id.log_out:
-//                        startActivity(new Intent(MainActivity.this,PhoneAuthentication.class));
-//                        mAuth.signOut();
-//                        finish();
-//                        break;
-//                }
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//                return true;
-//            }
-//        });
 
         //firebase stuff
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Users");
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
+        String phone = getIntent().getStringExtra("phone");
+        //reference = database.getReference("Users");
+
+        GuardianLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                WelcomeUser = navigationView.findViewById(R.id.Welcome_Note);
+//                reference.child(phone).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        String getname = task.getResult().toString();
+//                        WelcomeUser.setText(getname);
+//                    }
+//                });
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
@@ -141,9 +140,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
     private void checkMyPermission() {
-
-
         Dexter.withContext(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
 
             @Override
@@ -191,12 +189,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onMapReady(@NonNull GoogleMap googleMap) {
                         if (location!=null) {
+
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
                             MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("You are Here...").icon(BitmapFromVector(getApplicationContext(), R.drawable.marker_pin));
 
                             googleMap.addMarker(markerOptions);
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
                             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            
                         }
                     }
                 });
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
                 break;
             case R.id.log_out:
-                startActivity(new Intent(MainActivity.this, PhoneAuthentication.class));
+                startActivity(new Intent(MainActivity.this, LoginUser.class));
                 mAuth.signOut();
                 finish();
                 break;

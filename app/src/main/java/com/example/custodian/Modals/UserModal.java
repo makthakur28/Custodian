@@ -2,20 +2,24 @@ package com.example.custodian.Modals;
 
 public class UserModal {
 
-    String userName,phoneNumber,DOB;
+    String name,phoneNumber,password;
 
-    public UserModal(String userName, String phoneNumber, String DOB) {
-        this.userName = userName;
+    public UserModal(String name, String phoneNumber, String password) {
+        this.name = name;
         this.phoneNumber = phoneNumber;
-        this.DOB = DOB;
+        this.password = password;
+       //this.token = token;
     }
 
-    public String getUserName() {
-        return userName;
+    public UserModal() {
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {
@@ -26,11 +30,19 @@ public class UserModal {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getDOB() {
-        return DOB;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 }

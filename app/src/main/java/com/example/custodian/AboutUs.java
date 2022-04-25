@@ -66,7 +66,7 @@ public class AboutUs extends AppCompatActivity implements NavigationView.OnNavig
                 startActivity(new Intent(AboutUs.this, GetHelp.class));
                 break;
             case R.id.log_out:
-                startActivity(new Intent(AboutUs.this, PhoneAuthentication.class));
+                startActivity(new Intent(AboutUs.this, LoginUser.class));
                 mAuth.signOut();
                 finish();
                 break;

@@ -21,12 +21,21 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.custodian.Adapters.ContactsAdapter;
+import com.example.custodian.Adapters.RegUsersAdapter;
 import com.example.custodian.Modals.ContactsModal;
+import com.example.custodian.Modals.UserModal;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -40,23 +49,29 @@ import java.util.List;
 
 public class ManageGuardians extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    RecyclerView contactsRV;
+    RecyclerView contactsRV,RegUserRV;
     ImageButton menu;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     FirebaseAuth mAuth;
     ContactsAdapter contactRVAdapter;
+    ProgressBar progressBar;
+    RegUsersAdapter RegAdapter;
     ArrayList<ContactsModal> contactsModalArrayList;
+    ArrayList<ContactsModal> contactsModalArrayListTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_guardians);
         contactsRV = findViewById(R.id.contactsList);
+        RegUserRV = findViewById(R.id.RegUserList);
         menu = findViewById(R.id.menu_btn);
+        progressBar = findViewById(R.id.idPBLoading);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         contactsModalArrayList = new ArrayList<>();
+        contactsModalArrayListTop = new ArrayList<>();
 
         navigationView.bringToFront();
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
@@ -78,6 +93,64 @@ public class ManageGuardians extends AppCompatActivity implements NavigationView
 
         // calling a method to request permissions.
         requestPermissions();
+
+        //add new recycler to fetch users from firebase
+        //prepareRegUserRV();
+
+    }
+
+    private void getUserDetails(ContactsModal newUser) {
+        // in this method we are preparing our recycler view with adapter.
+        RegAdapter = new RegUsersAdapter(this, contactsModalArrayListTop);
+
+        // on below line we are setting layout manager.
+        RegUserRV.setLayoutManager(new LinearLayoutManager(this));
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Users");
+        Query query = reference.orderByChild("phoneNumber").equalTo(newUser.getPhone_number());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    String  phone = "",
+                            name = "";
+                    for(DataSnapshot childSnapshot : dataSnapshot.getChildren()){
+                        if(childSnapshot.child("phone").getValue()!=null)
+                            phone = childSnapshot.child("phone").getValue().toString();
+                        if(childSnapshot.child("name").getValue()!=null)
+                            name = childSnapshot.child("name").getValue().toString();
+
+
+                        ContactsModal mUser = new ContactsModal(name, phone,true);
+                        if (name.equals(phone))
+                            for(ContactsModal mContactIterator : contactsModalArrayList){
+                                if(mContactIterator.getPhone_number().equals(mUser.getPhone_number())){
+                                    mUser.setName(mContactIterator.getName());
+                                }
+                            }
+
+                        contactsModalArrayListTop.add(mUser);
+                        RegAdapter.notifyDataSetChanged();
+                        return;
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+//        for (ContactsModal user:contactsModalArrayList
+//             ) {
+//
+//        }
+
+        // on below line we are setting adapter to our recycler view.
+        RegUserRV.setAdapter(RegAdapter);
 
     }
 
@@ -216,6 +289,8 @@ public class ManageGuardians extends AppCompatActivity implements NavigationView
 
     @SuppressLint("Range")
     private void getContacts() {
+
+        progressBar.setVisibility(View.VISIBLE);
         // this method is use to read contact from users device.
         // on below line we are creating a string variables for
         // our contact id and display name.
@@ -245,8 +320,10 @@ public class ManageGuardians extends AppCompatActivity implements NavigationView
                     if (phoneCursor.moveToNext()) {
                         // on below line we are getting the phone number for our users and then adding the name along with phone number in array list.
                         String phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                        contactsModalArrayList.add(new ContactsModal(displayName, phoneNumber,false));
+                        //Log.d("check", "getContacts: "+displayName+" : "+phoneNumber);
+                        ContactsModal newUser = new ContactsModal(displayName, phoneNumber,false);
+                        contactsModalArrayList.add(newUser);
+                        getUserDetails(newUser);
                     }
                     // on below line we are closing our phone cursor.
                     phoneCursor.close();
@@ -256,12 +333,35 @@ public class ManageGuardians extends AppCompatActivity implements NavigationView
         // on below line we are closing our cursor.
         cursor.close();
         // on below line we are hiding our progress bar and notifying our adapter class.
+        progressBar.setVisibility(View.GONE);
         contactRVAdapter.notifyDataSetChanged();
+    }
+
+    private boolean[] userExist(String phoneNumber) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Users").child(phoneNumber);
+        final boolean[] check = {false};
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    check[0] =true;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return check;
     }
 
     private void prepareContactRV() {
         // in this method we are preparing our recycler view with adapter.
+
         contactRVAdapter = new ContactsAdapter(this, contactsModalArrayList);
+
         // on below line we are setting layout manager.
         contactsRV.setLayoutManager(new LinearLayoutManager(this));
         // on below line we are setting adapter to our recycler view.
@@ -293,13 +393,12 @@ public class ManageGuardians extends AppCompatActivity implements NavigationView
                 finish();
                 break;
             case R.id.log_out:
-                startActivity(new Intent(ManageGuardians.this, PhoneAuthentication.class));
+                startActivity(new Intent(ManageGuardians.this, LoginUser.class));
                 mAuth.signOut();
                 finish();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-//            }
     }
 }

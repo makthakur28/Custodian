@@ -132,7 +132,7 @@ public class GetHelp extends AppCompatActivity implements NavigationView.OnNavig
                 finish();
                 break;
             case R.id.log_out:
-                startActivity(new Intent(GetHelp.this, PhoneAuthentication.class));
+                startActivity(new Intent(GetHelp.this, LoginUser.class));
                 mAuth.signOut();
                 finish();
                 break;

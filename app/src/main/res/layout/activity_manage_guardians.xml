@@ -88,16 +88,21 @@
 
         </LinearLayout>
 
+
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contactsList"
+            android:id="@+id/RegUserList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="5dp"
-            android:layout_below="@+id/appBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBar" />
+            android:layout_below="@id/appBar"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/RegUserList"
+            android:padding="5dp" />
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
