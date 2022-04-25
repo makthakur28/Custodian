@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="?android:actionBarSize"
+        android:layout_height="?android:actionBarSize"
+        android:src="@drawable/profile"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mayank Thakur"
+            android:textStyle="bold"
+            android:textSize="29dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_loc"
+            android:drawablePadding="20dp"
+            android:padding="10dp"
+            android:text="Rajendra Nagar ,Thakur PG , Indore, Madhya Pradesh"
+            android:textSize="18dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/bar_round_bg"
+            android:src="@drawable/ic_direction"
+            android:layout_margin="10dp"
+            android:elevation="30dp"/>
+
+        <ImageButton
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/bar_round_bg"
+            android:src="@drawable/ic_my_location"
+            android:layout_margin="10dp"
+            android:elevation="30dp"/>
+        <ImageButton
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/bar_round_bg"
+            android:src="@drawable/ic_phone"
+            android:layout_margin="10dp"
+            android:elevation="30dp"/>
+        <ImageButton
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/bar_round_bg"
+            android:src="@drawable/ic_message"
+            android:layout_margin="10dp"
+            android:elevation="30dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

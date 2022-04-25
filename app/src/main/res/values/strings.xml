@@ -43,4 +43,6 @@
     <string name="heading3">Emergency SOS</string>
     <string name="description3">At the time of emergency press the SOS to send your locaton so that guardians can take action.</string>
     <string name="skip">Skip</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
