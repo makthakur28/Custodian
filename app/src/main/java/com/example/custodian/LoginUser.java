@@ -127,6 +127,7 @@ public class LoginUser extends AppCompatActivity {
                         intent.putExtra("phone",phone);
                         intent.putExtra("password",pass);
                         startActivity(intent);
+                        finish();
                     }
                     else{
                         edtPass.setError("Wrong password !");

@@ -1,5 +1,6 @@
 package com.example.custodian.Adapters;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -14,14 +15,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.custodian.MainActivity;
 import com.example.custodian.ManageGuardians;
 import com.example.custodian.Modals.ContactsModal;
 import com.example.custodian.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 
@@ -73,19 +82,33 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
 
+                    String message = "Download custodian App please!!";
+
+                    try {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(modal.getPhone_number(), null, message, null, null);
+
+                        Toast.makeText(context, "Message Sent",
+                                Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(context,ex.getMessage().toString(),
+                                Toast.LENGTH_LONG).show();
+                        ex.printStackTrace();
+                    }
+
 //                if(checkIfUser(modal.getPhone_number())){
 //                    sendRequest();
 //                }
                     //Getting intent and PendingIntent instance
-                Intent intent=new Intent(context, ManageGuardians.class);
-                PendingIntent pi=PendingIntent.getActivity(context, 0, intent,0);
-
-                //Get the SmsManager instance and call the sendTextMessage method to send message
-                SmsManager sms=SmsManager.getDefault();
-                sms.sendTextMessage(modal.getPhone_number(), null, "Download Custodian app!! please", pi,null);
-
-                    Toast.makeText(context, "Message Sent successfully!",
-                            Toast.LENGTH_LONG).show();
+//                Intent intent=new Intent(context, ManageGuardians.class);
+//                PendingIntent pi=PendingIntent.getActivity(context, 0, intent,0);
+//
+//                //Get the SmsManager instance and call the sendTextMessage method to send message
+//                SmsManager sms=SmsManager.getDefault();
+//                sms.sendTextMessage(modal.getPhone_number(), null, "Download Custodian app!! please", pi,null);
+//
+//                    Toast.makeText(context, "Message Sent successfully!",
+//                            Toast.LENGTH_LONG).show();
                 }
             });
         //}

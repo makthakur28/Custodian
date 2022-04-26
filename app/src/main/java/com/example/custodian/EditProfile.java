@@ -92,12 +92,12 @@ public class EditProfile extends AppCompatActivity implements NavigationView.OnN
 
 
 
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UpdateDB();
-            }
-        });
+//        update.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                UpdateDB();
+//            }
+//        });
 
 
         menu.setOnClickListener(new View.OnClickListener() {

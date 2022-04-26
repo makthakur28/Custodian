@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,13 +22,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
     ImageButton menu, locationBtn,notification_btn;
+    Button watchbtn,emergencyBtn;
     FirebaseAuth mAuth;
     FirebaseUser user;
     FirebaseDatabase database;
@@ -86,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         checkMyPermission();
+
+        watchbtn = findViewById(R.id.watch_over_btn);
+        emergencyBtn = findViewById(R.id.Emergency_btn);
         menu = findViewById(R.id.menu_Avatar);
         locationBtn = findViewById(R.id.my_location_btn);
         notification_btn = findViewById(R.id.notification_btn);
@@ -106,6 +114,118 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String phone = getIntent().getStringExtra("phone");
         //reference = database.getReference("Users");
 
+        //permissions
+        Dexter.withContext(this).withPermission(Manifest.permission.SEND_SMS).withListener(new PermissionListener() {
+
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        1002);
+                Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                permissionToken.continuePermissionRequest();
+            }
+        }).check();
+
+
+        watchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+// the message
+                String message = "your ward is feeling insecure , keep a watch!!  click on link to check: ";
+                String Url = "https://maps.google.com/?q="+latLng.latitude+","+latLng.longitude;
+
+                String finalMsg = message+Url;
+
+                Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.SEND_SMS).withListener(new PermissionListener() {
+
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                        Toast.makeText(MainActivity.this, "Sending request for Watch OVER", Toast.LENGTH_SHORT).show();
+                        sendSms(finalMsg);
+
+                        isPermissionGranted = true;
+                        //showMap();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.SEND_SMS},
+                                1002);
+                        Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
+                    }
+                }).check();
+
+// the phone numbers we want to send to
+
+            }
+        });
+
+        emergencyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+// the message
+                String message = "your ward is in Danger...and need someone !!  click on link to get Direction: ";
+                String Url = "https://maps.google.com/?q="+latLng.latitude+","+latLng.longitude;
+
+                String finalMsg = message+Url;
+
+// the phone numbers we want to send to
+                Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.SEND_SMS).withListener(new PermissionListener() {
+
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                        Toast.makeText(MainActivity.this, "Emergency SOS Sent!", Toast.LENGTH_SHORT).show();
+                        sendSms(finalMsg);
+
+                        isPermissionGranted = true;
+                        //showMap();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.SEND_SMS},
+                                1002);
+                        Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
+                    }
+                }).check();
+
+//                try {
+//                    SmsManager smsManager = SmsManager.getDefault();
+//                    smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+//                    Toast.makeText(getApplicationContext(), "Message Sent",
+//                            Toast.LENGTH_LONG).show();
+//                } catch (Exception ex) {
+//                    Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+//                            Toast.LENGTH_LONG).show();
+//                    ex.printStackTrace();
+//                }
+            }
+        });
+
         GuardianLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +237,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
 //                WelcomeUser = navigationView.findViewById(R.id.Welcome_Note);
 //                reference.child(phone).child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //                    @Override
@@ -146,15 +268,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void sendSms(String finalMsg) {
+
+        String[] numbers = {"+919174625434", "+919685260430","+919617769978","+918966974652","+917415525404"};
+
+//                for(String number : numbers) {
+//                    sms.sendTextMessage(number, null, finalMsg, null, null);
+//                }
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            for (String number:
+                    numbers) {
+                smsManager.sendTextMessage(number, null, finalMsg, null, null);
+            }
+
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
+    }
+
     private void showDialog() {
          final Dialog dialog = new Dialog(this);
+         ImageButton callmebtn,getdirectionsbtn,getlocationbtn,msgmebtn;
+
+
          dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
          dialog.setContentView(R.layout.bottomsheetlayout);
+
+        callmebtn = dialog.findViewById(R.id.callmenow);
+        getdirectionsbtn = dialog.findViewById(R.id.getDirections);
+        getlocationbtn = dialog.findViewById(R.id.getlocation);
+        msgmebtn = dialog.findViewById(R.id.msg_now);
          dialog.show();
          dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
          dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
          dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
          dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+         callmebtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 101);
+                 } else {
+                     String phoneNo = "tel:" + "9174625434";
+                     Intent intent = new Intent(Intent.ACTION_CALL);
+                     intent.setData(Uri.parse(phoneNo));
+                     startActivity(intent);
+                 }
+             }
+         });
     }
 
 
